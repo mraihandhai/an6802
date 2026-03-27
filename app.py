@@ -39,6 +39,12 @@ def wrong():
 def econ():
     return(render_template("econ.html"))
 
+@app.route("/foodExp",methods=["GET","POST"])
+def foodExp():
+    q = float(request.form.get("q"))
+    r = model.predict([[q]])
+    return(render_template("foodExp.html", r = r[0]))
+
 @app.route("/chatbot",methods=["GET","POST"])
 def chatbot():
     return(render_template("chatbot.html"))
@@ -69,11 +75,9 @@ def groqReply():
     )
     return(render_template("groqReply.html", r=r.choices[0].message.content))
 
-@app.route("/foodExp",methods=["GET","POST"])
-def foodExp():
-    q = float(request.form.get("q"))
-    r = model.predict([[q]])
-    return(render_template("foodExp.html", r = r[0]))
+@app.route("/equity",methods=["GET","POST"])
+def equity():
+    return(render_template("equity.html"))
 
 if __name__=="__main__":
     app.run()
