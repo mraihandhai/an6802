@@ -1,0 +1,17 @@
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Risk Calculator</h2>
+        <p>Paste a series of closing prices (one per line, or comma-separated). Minimum 10 values. Computes VaR, Sharpe Ratio, Volatility, and Max Drawdown.</p>
+        <form action="/riskResult" method="post">
+            <textarea name="prices" rows="8" placeholder="E.g.&#10;34.50&#10;34.80&#10;35.10&#10;34.90&#10;..." style="width:100%;padding:10px 14px;margin-top:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(13,17,23,0.7);color:#e6edf3;font-size:14px;font-family:inherit;resize:vertical;box-sizing:border-box;"></textarea>
+            <input type="submit" value="Compute Risk Metrics">
+        </form>
+        <form action="/main" method="post">
+            <input type="submit" value="Main" style="background:rgba(255,255,255,0.06);color:#7d8590;margin-top:8px;">
+        </form>
+    </div>
+</body>

@@ -1,0 +1,80 @@
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles.css') }}">
+    <style>
+        .wide { max-width: 680px; }
+        .section { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:14px 16px; margin-top:10px; text-align:left; }
+        .section h4 { margin:0 0 8px; color:#e6edf3; font-size:14px; }
+        .section p, .section li { font-size:13px; color:#8b949e; line-height:1.6; margin:4px 0; }
+        .section ul { padding-left:18px; margin:6px 0; }
+        .pill { display:inline-block; border-radius:20px; padding:2px 10px; font-size:11px; font-weight:600; margin:2px; }
+        .pill-blue   { background:rgba(79,142,247,0.15); color:#4f8ef7; border:1px solid rgba(79,142,247,0.3); }
+        .pill-green  { background:rgba(52,211,153,0.15); color:#34d399; border:1px solid rgba(52,211,153,0.3); }
+        .pill-yellow { background:rgba(251,191,36,0.15); color:#fbbf24; border:1px solid rgba(251,191,36,0.3); }
+        .pill-red    { background:rgba(248,113,113,0.15); color:#f87171; border:1px solid rgba(248,113,113,0.3); }
+    </style>
+</head>
+<body>
+    <div class="container wide">
+        <h2>AI Governance &amp; Regulatory Alignment</h2>
+        <p style="color:#7d8590;font-size:13px;">How this Agentic AI system addresses risk governance, model limitations, and Singapore regulatory standards.</p>
+
+        <div class="section">
+            <h4>1. Regulatory Context (MAS)</h4>
+            <p>This system is designed in alignment with the Monetary Authority of Singapore (MAS) guidelines on use of Artificial Intelligence and Data Analytics (AIDA) in financial services, including the FEAT principles:</p>
+            <span class="pill pill-blue">Fairness</span>
+            <span class="pill pill-blue">Ethics</span>
+            <span class="pill pill-blue">Accountability</span>
+            <span class="pill pill-blue">Transparency</span>
+            <p style="margin-top:8px;">All AI-generated recommendations are labelled clearly as model outputs, not licensed financial advice.</p>
+        </div>
+
+        <div class="section">
+            <h4>2. Model Risk Governance</h4>
+            <ul>
+                <li>ARIMA models assume stationarity and may underperform during structural breaks or market crises.</li>
+                <li>News sentiment is generated via a large language model (Groq / LLaMA) and may not reflect real-time news accurately.</li>
+                <li>VaR is a historical simulation and does not capture tail risks beyond the estimation window.</li>
+                <li>All models should be periodically backtested and recalibrated against out-of-sample data.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h4>3. Agentic AI Workflow Controls</h4>
+            <ul>
+                <li>The agent follows a deterministic step sequence (Plan &rarr; Fetch &rarr; Risk &rarr; Forecast &rarr; Sentiment &rarr; Synthesise) to ensure auditability.</li>
+                <li>Each tool invocation is logged in the agent reasoning steps visible to the user.</li>
+                <li>Human-in-the-loop: final investment decisions remain with the human user; the agent only provides a signal.</li>
+                <li>Failure modes (e.g., API outages) are handled with fallback methods to ensure the workflow completes.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h4>4. Bias &amp; Fairness Considerations</h4>
+            <ul>
+                <li>LLM sentiment analysis may reflect biases present in the training data of the underlying model.</li>
+                <li>The system is trained/configured only on publicly available financial data; no insider information is used.</li>
+                <li>Recommendations are framed as signals, not certainties, to avoid over-reliance by end users.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h4>5. Failure Cases &amp; Mitigations</h4>
+            <ul>
+                <li><span class="pill pill-red">Risk</span> ARIMA overfitting on short series &rarr; <span class="pill pill-green">Mitigation</span> Use minimum 60 data points; linear fallback if model fails.</li>
+                <li><span class="pill pill-red">Risk</span> LLM hallucination in sentiment &rarr; <span class="pill pill-green">Mitigation</span> Output is clearly labelled as AI-generated; user is prompted to verify.</li>
+                <li><span class="pill pill-red">Risk</span> Data feed outage &rarr; <span class="pill pill-green">Mitigation</span> Simulated fallback data with clear disclosure note.</li>
+                <li><span class="pill pill-red">Risk</span> User over-reliance on Buy/Hold/Sell signal &rarr; <span class="pill pill-green">Mitigation</span> Prominent disclaimer on every results page.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h4>6. Data Privacy</h4>
+            <p>No user financial data is stored persistently. Stock data is fetched in real-time from public APIs (Yahoo Finance). Session data is used only to personalise the UI within a single session.</p>
+        </div>
+
+        <form action="/main" method="post" style="margin-top:16px;">
+            <input type="submit" value="Main" style="background:rgba(255,255,255,0.06);color:#7d8590;">
+        </form>
+    </div>
+</body>

@@ -1,0 +1,20 @@
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Stock Price &amp; Risk Analysis</h2>
+        <p>Select a stock to run the Agentic AI workflow. The agent will fetch price data, compute risk metrics, run an ARIMA forecast, assess news sentiment, and synthesise a recommendation.</p>
+        <form action="/agent" method="post">
+            <select name="stock" style="width:100%;padding:10px 14px;margin-top:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(13,17,23,0.7);color:#e6edf3;font-size:15px;font-family:inherit;">
+                <option value="DBS">DBS Group Holdings (D05.SI)</option>
+                <option value="UOB">United Overseas Bank (U11.SI)</option>
+            </select>
+            <input type="submit" value="Run Agentic AI Analysis">
+        </form>
+        <form action="/main" method="post">
+            <input type="submit" value="Main" style="background:rgba(255,255,255,0.06);color:#7d8590;margin-top:8px;">
+        </form>
+    </div>
+</body>

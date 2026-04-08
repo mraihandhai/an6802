@@ -1,0 +1,158 @@
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles.css') }}">
+    <style>
+        .wide { max-width: 720px; }
+        .card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-top: 10px;
+            text-align: left;
+        }
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+        .badge {
+            background: linear-gradient(135deg,#4f8ef7,#3a73d4);
+            color: #fff;
+            border-radius: 20px;
+            padding: 2px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .step-name { font-weight: 600; color: #e6edf3; font-size: 14px; }
+        .step-desc { color: #8b949e; font-size: 13px; line-height: 1.5; }
+        .metric-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+        .metric {
+            background: rgba(79,142,247,0.08);
+            border: 1px solid rgba(79,142,247,0.2);
+            border-radius: 8px;
+            padding: 8px 12px;
+            flex: 1 1 140px;
+            text-align: center;
+        }
+        .metric-label { font-size: 11px; color: #7d8590; }
+        .metric-value { font-size: 18px; font-weight: 700; color: #4f8ef7; margin-top: 2px; }
+        .risk-low    { color: #34d399; }
+        .risk-medium { color: #fbbf24; }
+        .risk-high   { color: #f87171; }
+        .rec-box {
+            background: rgba(52,211,153,0.07);
+            border: 1px solid rgba(52,211,153,0.25);
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-top: 10px;
+            color: #cde8dc;
+            font-size: 13px;
+            line-height: 1.6;
+            text-align: left;
+        }
+        .forecast-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+        .fc-pill {
+            background: rgba(167,139,250,0.1);
+            border: 1px solid rgba(167,139,250,0.25);
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-size: 13px;
+            color: #c4b5fd;
+        }
+        .sentiment-pill {
+            display:inline-block;
+            border-radius:20px;
+            padding:2px 12px;
+            font-size:12px;
+            font-weight:600;
+        }
+        .sent-Positive { background:rgba(52,211,153,0.15); color:#34d399; border:1px solid rgba(52,211,153,0.3); }
+        .sent-Neutral  { background:rgba(251,191,36,0.15);  color:#fbbf24; border:1px solid rgba(251,191,36,0.3); }
+        .sent-Negative { background:rgba(248,113,113,0.15); color:#f87171; border:1px solid rgba(248,113,113,0.3); }
+        .section-title { font-size:11px; color:#7d8590; text-transform:uppercase; letter-spacing:0.5px; margin:16px 0 4px; }
+        .disclaimer { font-size:11px; color:#484f58; margin-top:16px; line-height:1.5; text-align:left; }
+    </style>
+</head>
+<body>
+    <div class="container wide">
+        <h2>Agentic AI Analysis</h2>
+        <p style="color:#4f8ef7;margin-top:2px;">{{ result.company }} &nbsp;|&nbsp; {{ result.ticker }}</p>
+
+        <!-- KEY METRICS -->
+        <p class="section-title">Risk Metrics</p>
+        <div class="metric-row">
+            <div class="metric">
+                <div class="metric-label">Current Price</div>
+                <div class="metric-value">SGD {{ result.stock_data.current_price }}</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Annual Volatility</div>
+                <div class="metric-value">{{ result.risk.annual_volatility }}%</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Sharpe Ratio</div>
+                <div class="metric-value">{{ result.risk.sharpe_ratio }}</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">95% 1-day VaR</div>
+                <div class="metric-value">{{ result.risk.var_95_pct }}%</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Max Drawdown</div>
+                <div class="metric-value">{{ result.risk.max_drawdown_pct }}%</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Risk Band</div>
+                <div class="metric-value risk-{{ result.risk.risk_band | lower }}">{{ result.risk.risk_band }}</div>
+            </div>
+        </div>
+
+        <!-- FORECAST -->
+        <p class="section-title">ARIMA 5-Day Price Forecast (SGD)</p>
+        <div class="forecast-row">
+            {% for price in result.forecast.forecast %}
+            <span class="fc-pill">Day {{ loop.index }}: {{ price }}</span>
+            {% endfor %}
+        </div>
+        <p style="font-size:11px;color:#484f58;margin-top:4px;">Model: {{ result.forecast.model }} &nbsp;|&nbsp; 90% CI upper: {{ result.forecast.upper_90 }}</p>
+
+        <!-- SENTIMENT -->
+        <p class="section-title">News Sentiment</p>
+        <span class="sentiment-pill sent-{{ result.sentiment.sentiment }}">{{ result.sentiment.sentiment }} ({{ result.sentiment.score }})</span>
+        <p style="font-size:13px;color:#8b949e;margin-top:6px;">{{ result.sentiment.outlook }}</p>
+        {% if result.sentiment.key_factors %}
+        <p style="font-size:12px;color:#484f58;">Key factors: {{ result.sentiment.key_factors | join(' &nbsp;|&nbsp; ') }}</p>
+        {% endif %}
+
+        <!-- RECOMMENDATION -->
+        <p class="section-title">AI Recommendation</p>
+        <div class="rec-box">{{ result.recommendation }}</div>
+
+        <!-- AGENT STEPS LOG -->
+        <p class="section-title">Agent Reasoning Steps</p>
+        {% for step in result.steps_log %}
+        <div class="card">
+            <div class="step-header">
+                <span class="badge">Step {{ step.step }}</span>
+                <span class="step-name">{{ step.name }}</span>
+            </div>
+            <div class="step-desc">{{ step.description }}</div>
+        </div>
+        {% endfor %}
+
+        {% if result.stock_data.note %}
+        <p class="disclaimer">Note: {{ result.stock_data.note }}</p>
+        {% endif %}
+        <p class="disclaimer">Disclaimer: This output is generated by an AI model for educational purposes only and does not constitute financial advice. All investment decisions should be made with the guidance of a licensed financial professional. Model outputs are subject to uncertainty and should be interpreted within the context of MAS regulatory guidelines.</p>
+
+        <form action="/stock" method="post" style="margin-top:16px;">
+            <input type="submit" value="Analyse Another Stock">
+        </form>
+        <form action="/main" method="post">
+            <input type="submit" value="Main" style="background:rgba(255,255,255,0.06);color:#7d8590;margin-top:8px;">
+        </form>
+    </div>
+</body>

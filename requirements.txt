@@ -3,3 +3,7 @@ gunicorn
 scikit-learn
 joblib
 groq
+yfinance
+statsmodels
+numpy
+pandas
