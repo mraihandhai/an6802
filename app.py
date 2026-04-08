@@ -6,7 +6,7 @@ import numpy as np
 # ── Groq client ──────────────────────────────────────────────────────────────
 client = Groq()
 
-# ── Food expenditure model (existing) ────────────────────────────────────────
+# ── Food expenditure model ────────────────────────────────────────
 food_model = joblib.load("foodexp.pkl")
 
 app = Flask(__name__)
@@ -331,8 +331,8 @@ def econ():
 @app.route("/foodExp", methods=["GET", "POST"])
 def foodExp():
     q = float(request.form.get("q"))
-    r = food_model.predict([[q]])
-    return render_template("foodExp.html", r=round(float(r[0]), 2))
+    r = food_model.predict([[q]]).flatten()[0]
+    return render_template("foodExp.html", r=round(float(r), 2))
 
 @app.route("/chatbot", methods=["GET", "POST"])
 def chatbot():
@@ -355,7 +355,10 @@ def groqReply():
     q = request.form.get("q")
     r = client.chat.completions.create(
         model="llama-3.1-8b-instant",
-        messages=[{"role": "system", "content": q}],
+        messages=[
+            {"role": "system", "content": "Answer concisely in plain text only. No bullet points, no bold, no markdown formatting, no headers."},
+            {"role": "user", "content": q}
+        ],
     )
     return render_template("groqReply.html", r=r.choices[0].message.content)
 
@@ -366,8 +369,6 @@ def equity():
 @app.route("/apple", methods=["GET", "POST"])
 def apple():
     return render_template("apple.html")
-
-# ── NEW ROUTES ────────────────────────────────────────────────────────────────
 
 @app.route("/stock", methods=["GET", "POST"])
 def stock():
